@@ -1,6 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for
 from flask_session import Session
 from tempfile import mkdtemp
+from helpers import check_win, minimax
 
 app = Flask(__name__)
 
@@ -24,25 +25,8 @@ def play(row, col):
     # add move
     session["board"][row][col] = session["turn"]
 
-    # Check for win
-    # Check rows and columns
-    for i in range(3):
-        if ((session["board"][i][0] == session["turn"] and 
-            session["board"][i][1] == session["turn"] and
-            session["board"][i][2] == session["turn"]) or 
-            (session["board"][0][i] == session["turn"] and
-            session["board"][1][i] == session["turn"] and
-            session["board"][2][i] == session["turn"])):
-            session["winner"] = session["turn"]
-            break
-    # Check diagonals
-    if ((session["board"][0][0] == session["turn"] and
-        session["board"][1][1] == session["turn"] and
-        session["board"][2][2] == session["turn"]) or 
-        (session["board"][0][2] == session["turn"] and
-        session["board"][1][1] == session["turn"] and
-        session["board"][2][0] == session["turn"])):
-       session["winner"] = session["turn"]
+    # Check for winner
+    session["winner"] = check_win(session["board"], session["turn"])
 
     # next move
     if session["turn"] == "X":
@@ -56,3 +40,16 @@ def play(row, col):
 def reset():
     del(session["board"])
     return redirect(url_for("index"))
+
+@app.route("/ai")
+def ai():
+    # Manual copy of session["board"]! Using session["board"].copy(), 
+    # list(session["board"]), and session["board"][:] didn't work!
+    # All return a session object.
+    game = [[None, None, None], [None, None, None], [None, None, None]]
+    for i in range(3):
+        for j in range(3):
+            game[i][j] = session["board"][i][j]
+    turn = str(session["turn"])
+    move = minimax(game, turn)
+    return redirect(url_for("play", row=move[1][0], col=move[1][1]))

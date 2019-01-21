@@ -1,0 +1,21 @@
+body {
+    text-align: center;
+}
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+td {
+    border: 2px solid black;
+    width: 150px;
+    height: 150px;
+    font-size: 30px;
+    text-align: center;
+}
+td > a {
+    font-size: 18px;
+    text-decoration: none;
+}
+a:visited {
+    color: blue;
+}
