@@ -38,7 +38,10 @@ def play(row, col):
 
 @app.route("/reset")
 def reset():
-    del(session["board"])
+    try:
+        del(session["board"])
+    except KeyError:
+        pass
     return redirect(url_for("index"))
 
 @app.route("/ai")
