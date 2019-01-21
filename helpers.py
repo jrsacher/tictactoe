@@ -23,7 +23,6 @@ def check_win(game, turn):
     return winner
 
 def minimax(game, turn, coords=None):
-    print(f"\n\n{game}")
     if check_win(game, turn) == "X":
         return 1, coords
     elif check_win(game, turn) == "O":
@@ -46,7 +45,6 @@ def minimax(game, turn, coords=None):
             new_score = minimax(new_game, "O", move)
             if new_score[0] > score[0]:
                 score = new_score
-        print(f"{score}\n")
         return score
     
     if turn == "O":
@@ -57,7 +55,6 @@ def minimax(game, turn, coords=None):
             new_score = minimax(new_game, "X", move)
             if new_score[0] < score[0]:
                 score = new_score
-        print(f"{score}\n")
         return score
             
         
